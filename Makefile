@@ -2,6 +2,7 @@ VERSION='v0.0.1'
 all: clean build
 clean:
 	rm -f ${PWD}/out/vmanage-linux-amd64-${VERSION}
+	rm -f ${PWD}/out/vmanage-darwin-amd64-${VERSION}
 
 build:
 	docker build -t vmanage:build .	
