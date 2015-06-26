@@ -1,0 +1,8 @@
+export 'BASE_DN=dc=example,dc=net'
+export 'LDAP_SERVER=ldap.example.net'
+export 'LDAP_PASSWORD=myPassword'
+export 'VCAPI_USERNAME=api.username'
+export 'VCAPI_PASSWORD=apiPassword'
+export 'VCAPI_SCHOOLID=whitby'
+export 'GRADUATION_YEAR=2023'
+
