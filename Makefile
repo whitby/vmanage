@@ -1,4 +1,4 @@
-VERSION='0.0.1'
+VERSION='v0.0.1'
 all: clean build
 clean:
 	rm -f ${PWD}/out/vmanage-linux-amd64-${VERSION}
