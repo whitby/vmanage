@@ -14,3 +14,5 @@ build:
 zip:
 	cd ${PWD}/out && tar -cvf vmanage-linux-amd64-${VERSION}.tar.gz vmanage-linux-amd64-${VERSION} && cd ..
 	cd ${PWD}/out && tar -cvf vmanage-darwin-amd64-${VERSION}.tar.gz vmanage-darwin-amd64-${VERSION} && cd ..
+run:
+	docker run -it --rm --name vmanage-build -v ${PWD}/out:/var/shared vmanage:build /bin/bash
