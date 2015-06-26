@@ -26,6 +26,10 @@ type Status struct {
 	Status string `json:"status"`
 }
 
+func (s *Status) Set(status string) {
+	s.Status = status
+}
+
 var (
 	wg             sync.WaitGroup
 	ldapServer     string
@@ -80,7 +84,8 @@ func init() {
 func syncVCtoAD() {
 	l, err := initLdap()
 	if err != nil {
-		log.Fatalf("ERROR: %s\n", err.Error())
+		status.Set("LDAP_CONN_FAILURE")
+		log.Println("ERROR: %s\n", err.Error())
 	}
 	defer l.Close()
 
