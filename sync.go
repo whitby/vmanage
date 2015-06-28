@@ -95,33 +95,17 @@ func initLdap() (*ldap.Conn, error) {
 }
 
 func formerStudents(client *vcapi.Client, opt *vcapi.ListOptions) ([]vcapi.Alumni, error) {
-	if *recent {
-		alumni, err := client.Alumni.Recent(opt)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return alumni, nil
+	if recent {
+		return client.Alumni.Recent(opt)
 	}
-	alumni, err := client.Alumni.List(opt)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return alumni, nil
+	return client.Alumni.List(opt)
 }
 
 func currentStudents(client *vcapi.Client, opt *vcapi.ListOptions) ([]vcapi.Student, error) {
-	if *recent {
-		students, err := client.Students.Recent(opt)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return students, nil
+	if recent {
+		return client.Students.Recent(opt)
 	}
-	students, err := client.Students.List(opt)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return students, nil
+	return client.Students.List(opt)
 }
 
 // Disable LDAP Accounts for alumni of a certain graduation year.
@@ -136,7 +120,9 @@ func disableFormerStudents(client *vcapi.Client, l *ldap.Conn, year int) {
 	for {
 		alumni, err := formerStudents(client, opt)
 		if err != nil {
-			log.Fatal(err)
+			log.Println("Encountered an error when fetching alumni")
+			log.Println(err)
+			return
 		}
 
 		for _, a := range alumni {
@@ -170,7 +156,9 @@ func enableCurrentStudents(client *vcapi.Client, l *ldap.Conn) {
 	for {
 		students, err := currentStudents(client, opt)
 		if err != nil {
-			log.Fatal(err)
+			log.Println("Encountered an error when fetching students")
+			log.Println(err)
+			return
 		}
 
 		for _, s := range students {

@@ -38,9 +38,9 @@ var (
 	attributes     = []string{"dn", "cn", "useraccountcontrol"}
 	user           string
 	passwd         string
-	recent         *bool
-	debug          *bool
-	server         *bool
+	recent         bool
+	debug          bool
+	server         bool
 	config         *vcapi.Config
 	graduationYear int
 	status         Status = Status{"OK"}
@@ -58,9 +58,9 @@ func init() {
 		user = fmt.Sprintf("cn=Administrator,cn=Users,%v", baseDN)
 	}
 	passwd = os.Getenv("LDAP_PASSWORD")
-	recent = flag.Bool("recent", true, "Only check recent changes")
-	debug = flag.Bool("debug", false, "debug ldap connection")
-	server = flag.Bool("server", false, "run as daemon, with http server")
+	flag.BoolVar(&recent, "recent", true, "Only check recent changes")
+	flag.BoolVar(&debug, "debug", false, "debug ldap connection")
+	flag.BoolVar(&server, "server", false, "run as daemon, with http server")
 	// vcapi Configuration
 	config = &vcapi.Config{
 		Username: os.Getenv("VCAPI_USERNAME"), // API Username
@@ -90,7 +90,7 @@ func syncVCtoAD() {
 	defer l.Close()
 
 	// debug sets ldap to debug mode.
-	if *debug {
+	if debug {
 		l.Debug = true
 	}
 
@@ -112,6 +112,7 @@ func syncVCtoAD() {
 
 	// wait for goroutines to sync up
 	wg.Wait()
+	status.Set("OK")
 }
 
 func statusHandler(w http.ResponseWriter, r *http.Request) {
@@ -130,7 +131,8 @@ func serve() {
 }
 
 func main() {
-	if *server {
+	if server {
+		syncVCtoAD()
 		go serve()
 		tickChan := time.NewTicker(time.Minute * 15).C
 		for {
